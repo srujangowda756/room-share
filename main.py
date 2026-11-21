@@ -12,8 +12,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="",
-    description="",
+    title="Roomie adda",
+    description="The app that connects to you",
     version="1.0.0",
     lifespan=lifespan
 )
