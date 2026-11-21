@@ -2,7 +2,7 @@ from jose import JWTError, jwt
 from datetime import datetime, timezone, timedelta
 from fastapi import HTTPException,Depends
 from fastapi.security import OAuth2PasswordBearer
-from features.config import settings
+from core.config import settings
 
 SECRET_KEY = settings.SECRET_KEY
 ALGORITHM = settings.ALGORITHM

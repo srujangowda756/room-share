@@ -1,0 +1,15 @@
+from sqlalchemy import Column,String,DateTime
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
+from database import Base
+from datetime import datetime,timezone
+import uuid
+
+class User(Base):
+    __tablename__="users"
+
+    id=Column(UUID(as_uuid=True),primary_key=True,default=uuid.uuid4)
+    email=Column(String,unique=True,nullable=False)
+    password=Column(String,nullable=False)
+    created_at=Column(DateTime(timezone=True),default=lambda:datetime.now(tz=timezone.utc))
+    blog = relationship("Blog" , back_populates="author",lazy="selectin")

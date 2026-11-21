@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from database import engine
+from routes.user import route as user_router
 
 
 @asynccontextmanager
@@ -34,3 +35,6 @@ async def health_route():
         "status": "working",
         "service": "scheduler"
     }
+
+
+app.include_router(user_router)
