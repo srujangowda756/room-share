@@ -1,9 +1,26 @@
-from passlib.context import CryptContext
+from argon2 import PasswordHasher
+from argon2.exceptions import InvalidHashError, VerificationError, VerifyMismatchError
+from fastapi.concurrency import run_in_threadpool
 
-pwd_context=CryptContext(schemes=["bcrypt"],deprecated="auto")
+_ph = PasswordHasher()
 
-def hash_password(password:str)->str:
-    return pwd_context.hash(password)
+DUMMY_HASH = _ph.hash("dummy-password-for-timing-only")
 
-def verify_password(plain_password:str,hashed_password:str)->bool:
-    return pwd_context.verify(plain_password,hashed_password)
+
+def _hash(password: str) -> str:
+    return _ph.hash(password)
+
+
+def _verify(password: str, hashed: str) -> bool:
+    try:
+        return _ph.verify(hashed, password)
+    except (VerifyMismatchError, VerificationError, InvalidHashError):
+        return False
+
+
+async def hash_password(password: str) -> str:
+    return await run_in_threadpool(_hash, password)
+
+
+async def verify_password(password: str, hashed: str) -> bool:
+    return await run_in_threadpool(_verify, password, hashed)
